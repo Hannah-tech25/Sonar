@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Radar Display</title>
+  <style>
+    body { margin: 0; background: black; }
+    canvas { display: block; margin: auto; background: black; }
+  </style>
+</head>
+<body>
+<canvas id="radar" width="400" height="400"></canvas>
+
+<script>
+  const canvas = document.getElementById("radar");
+  const ctx = canvas.getContext("2d");
+  const centerX = canvas.width / 2;
+  const centerY = canvas.height / 2;
+  const radius = 180;
+  let angle = 0;
+
+  function drawRadar() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw circles
+    ctx.strokeStyle = "green";
+    ctx.lineWidth = 1;
+    for (let r = 40; r <= radius; r += 40) {
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, r, 0, 2 * Math.PI);
+      ctx.stroke();
+    }
+
+    // Draw cross lines
+    ctx.beginPath();
+    ctx.moveTo(centerX, centerY - radius);
+    ctx.lineTo(centerX, centerY + radius);
+    ctx.moveTo(centerX - radius, centerY);
+    ctx.lineTo(centerX + radius, centerY);
+    ctx.stroke();
+
+    // Draw sweeping needle
+    ctx.strokeStyle = "lime";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(centerX, centerY);
+    const needleX = centerX + radius * Math.cos(angle);
+    const needleY = centerY + radius * Math.sin(angle);
+    ctx.lineTo(needleX, needleY);
+    ctx.stroke();
+
+    angle += 0.02;
+    if (angle > 2 * Math.PI) angle = 0;
+
+    requestAnimationFrame(drawRadar);
+  }
+
+  drawRadar();
+</script>
+</body>
+</html>
